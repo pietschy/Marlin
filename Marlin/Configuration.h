@@ -3,6 +3,22 @@
 
 #include "boards.h"
 
+// Andrews custom config bits that change from time to time
+// To compute this do a 
+// G28 X Z 
+// G29
+// Then 
+// G1 X95 Y95 Z0.1 (or what ever feeler gauge you want to use) 
+// and check the distance using a feeler guage. Use G1 Xnn 
+// until the distance is correct then change the following by the difference.
+// PLEASE NOTE that is is the distance, not the signed offset.  The actual use 
+// of this uses the correct sign (i.e -ve). 
+// IMPORTANT: Decreasing this number will raise the hotend.
+#define ANDREWS_Z_PROBE_DISTANCE_FROM_EXTRUDER 2.39
+#define ANDREWS_EXTRUSION_MULTIPLIER 0.85
+
+
+
 // This configuration file contains the basic settings.
 // Advanced settings can be found in Configuration_adv.h
 // BASIC SETTINGS: select your board type, temperature sensor type, axis scaling, and endstop configuration
@@ -379,10 +395,10 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
   #ifdef AUTO_BED_LEVELING_GRID
 
     // set the rectangle in which to probe
-    #define LEFT_PROBE_BED_POSITION 30
-    #define RIGHT_PROBE_BED_POSITION 175
-    #define BACK_PROBE_BED_POSITION 175
-    #define FRONT_PROBE_BED_POSITION 30
+    #define LEFT_PROBE_BED_POSITION 23
+    #define RIGHT_PROBE_BED_POSITION 150
+    #define BACK_PROBE_BED_POSITION 140
+    #define FRONT_PROBE_BED_POSITION 10
 
      // set the number of grid points per dimension
      // I wouldn't see a reason to go above 3 (=9 probing points on the bed)
@@ -407,7 +423,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
   // X and Y offsets must be integers
   #define X_PROBE_OFFSET_FROM_EXTRUDER -13
   #define Y_PROBE_OFFSET_FROM_EXTRUDER -38
-  #define Z_PROBE_OFFSET_FROM_EXTRUDER -2.80
+  #define Z_PROBE_OFFSET_FROM_EXTRUDER -ANDREWS_Z_PROBE_DISTANCE_FROM_EXTRUDER
 
   #define Z_RAISE_BEFORE_HOMING 10       // (in mm) Raise Z before homing (G28) for Probe Clearance.
                                         // Be sure you have this distance over your Z_MAX_POS in case
@@ -415,7 +431,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
   #define XY_TRAVEL_SPEED 8000         // X and Y axis travel speed between probes, in mm/min
 
   #define Z_RAISE_BEFORE_PROBING 10    //How much the extruder will be raised before traveling to the first probing point.
-  #define Z_RAISE_BETWEEN_PROBINGS 10  //How much the extruder will be raised when traveling from between next probing points
+  #define Z_RAISE_BETWEEN_PROBINGS 4  //How much the extruder will be raised when traveling from between next probing points
 
   //#define Z_PROBE_SLED // turn on if you have a z-probe mounted on a sled like those designed by Charles Bell
   //#define SLED_DOCKING_OFFSET 5 // the extra distance the X axis must travel to pickup the sled. 0 should be fine but you can push it further if you'd like.
@@ -487,7 +503,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 
 // default settings
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   {78.7402,78.7402,200.0*8/3,760*1.1}  // default steps per unit for Ultimaker
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {80,80,4000.00,94}  // Custom by Andrew as per original Prusa i3 download from Sintron
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {80,80,4000.00,94*ANDREWS_EXTRUSION_MULTIPLIER}  // Custom by Andrew as per original Prusa i3 download from Sintron scaled by .95
 #define DEFAULT_MAX_FEEDRATE          {500, 500, 2, 25}    // (mm/sec)
 #define DEFAULT_MAX_ACCELERATION      {9000,9000,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for Skeinforge 40+, for older versions raise them a lot.
 
